@@ -1,0 +1,254 @@
+#include <SFML/Graphics.hpp>
+#include <sstream>
+#include <iostream>
+
+
+using namespace sf;
+
+
+int main()
+{
+	float schetchik = 0;
+	float upp1 = 0.01;
+	String score = "";
+	float upp2 = 0;
+	float cost1 = 1;
+	float incometimer = 0;
+	float income;
+	float cost2 = 3;
+	float cost3 = 5;
+	float upp3 = 0;
+	float anismetr = 0;
+	bool ansi = false;
+
+	Font font;//шрифт 
+	font.loadFromFile("images/CyrilicOld.ttf");
+	Text text("", font, 30);
+	text.setColor(Color::Blue);
+	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+
+	Text text2("", font, 30);
+	text2.setColor(Color::Blue);
+	text2.setStyle(sf::Text::Bold | sf::Text::Underlined);
+	
+	
+	Text text1("", font, 30);
+	text1.setColor(Color::Blue);
+	text1.setStyle(sf::Text::Bold | sf::Text::Underlined);
+	
+	
+	Text text3("", font, 30);
+	text3.setColor(Color::Yellow);
+	text3.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+
+	Text text4("", font, 30);
+	text4.setColor(Color::Red);
+	text4.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+
+	Text text5("", font, 30);
+	text5.setColor(Color::Red);
+	text5.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+
+	Text text6("", font, 30);
+	text6.setColor(Color::Red);
+	text6.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+	
+
+	Image doska;
+	doska.loadFromFile("images/doska.png");
+	Texture doskatex;
+	doskatex.loadFromImage(doska);
+	Sprite doskaspr;
+	doskaspr.setTexture(doskatex);
+	doskaspr.setPosition(0, 0);
+
+
+	Image primer1;
+	primer1.loadFromFile("images/1.png");
+	primer1.createMaskFromColor((sf::Color::White),0);
+	Texture primer1tex;
+	primer1tex.loadFromImage(primer1);
+	Sprite primer1spr;
+	primer1spr.setTexture(primer1tex);
+	primer1spr.setPosition(100,200);
+
+
+	Image primer2;
+	primer2.loadFromFile("images/2.png");
+	primer2.createMaskFromColor((sf::Color::White), 0);
+	Texture primer2tex;
+	primer2tex.loadFromImage(primer2);
+	Sprite primer2spr;
+	primer2spr.setTexture(primer2tex);
+	primer2spr.setPosition(100, 300);
+
+
+	Image primer3;
+	primer3.loadFromFile("images/3.png");
+	primer3.createMaskFromColor((sf::Color::White), 0);
+	Texture primer3tex;
+	primer3tex.loadFromImage(primer3);
+	Sprite primer3spr;
+	primer3spr.setTexture(primer3tex);
+	primer3spr.setPosition(100, 400);
+
+	Image anis1;
+	anis1.loadFromFile("images/anisimov1.png");
+	anis1.createMaskFromColor((sf::Color::White), 0);
+	Texture anis1tex;
+	anis1tex.loadFromImage(anis1);
+	Sprite anis1spr;
+	anis1spr.setTexture(anis1tex);
+	anis1spr.setPosition(1000, 600);
+
+
+	RenderWindow window(sf::VideoMode(1245, 797), "MMA CLICKER");
+
+	Clock clock;
+
+	while (window.isOpen())
+	{
+		income = upp2+upp3;
+		
+		
+		float time = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
+		clock.restart(); //перезагружает время
+		time = time / 800; //скорость игры
+
+
+		Vector2i pixelPos = Mouse::getPosition(window);
+		Vector2f pos = window.mapPixelToCoords(pixelPos);
+		//std::cout << pixelPos.x << "\n";
+		//std::cout << pos.x << "\n";
+
+		incometimer += time;
+		if (incometimer > 1000)
+		{
+			schetchik = income + schetchik;
+			incometimer = 0;
+			if (ansi ==true)
+			{
+				anismetr = anismetr + 1;
+			}
+			
+		}
+
+
+		Event event;
+		while (window.pollEvent(event))
+		{
+			
+			if (event.type == sf::Event::Closed)
+				window.close();
+
+			if (event.type == Event::MouseButtonPressed)//если нажата клавиша мыши
+				if (event.key.code == Mouse::Left)//а именно левая
+				{
+					schetchik = schetchik + upp1;
+				}
+
+			if (event.type == Event::MouseButtonPressed)//если нажата клавиша мыши
+				if (event.key.code == Mouse::Left)//а именно левая
+					if (primer1spr.getGlobalBounds().contains(pos.x,pos.y))
+						if (schetchik > cost1)
+				{
+					upp1 = upp1 + 0.01;
+					schetchik = schetchik - cost1;
+					cost1 = cost1 * 2;
+					ansi = true;
+
+				}
+			if (event.type == Event::MouseButtonPressed)//если нажата клавиша мыши
+				if (event.key.code == Mouse::Left)//а именно левая
+					if (primer2spr.getGlobalBounds().contains(pos.x, pos.y))
+						if (schetchik > cost2)
+						{
+							upp2 = upp2 + 0.05;
+							schetchik = schetchik - cost2;
+							cost2 = cost2 * 2;
+
+						}
+			if (event.type == Event::MouseButtonPressed)//если нажата клавиша мыши
+				if (event.key.code == Mouse::Left)//а именно левая
+					if (primer3spr.getGlobalBounds().contains(pos.x, pos.y))
+						if (schetchik > cost3)
+						{
+							upp3 = upp3 + 0.2;
+							schetchik = schetchik - cost3;
+							cost2 = cost2 * 2;
+
+						}
+
+			window.clear();
+
+
+			std::ostringstream playerScoreString;
+			playerScoreString << round(schetchik*100)/100;
+			text.setString("Решённых примеров:" + playerScoreString.str());
+			text.setPosition(800, 200);
+
+
+			std::ostringstream upgrade1String;
+			upgrade1String << round(upp1* 100) / 100;;
+			text1.setString("Примеров за клик:" + upgrade1String.str());
+			text1.setPosition(800, 160);
+
+
+			std::ostringstream upgrade2String;
+			upgrade2String << round(income * 100) / 100;;
+			text2.setString("Примеров в секунду:" + upgrade2String.str());
+			text2.setPosition(800, 120);
+
+			text3.setString("Магазин улучшений");
+			text3.setPosition(100, 100);
+
+
+			std::ostringstream cost1str;
+			cost1str << cost1;
+			text4.setString( cost1str.str());
+			text4.setPosition(360, 230);
+
+			std::ostringstream cost2str;
+			cost2str << cost2;
+			text5.setString(cost2str.str());
+			text5.setPosition(360, 330);
+
+
+			std::ostringstream cost3str;
+			cost3str << cost3;
+			text6.setString(cost3str.str());
+			text6.setPosition(360, 430);
+
+
+			window.draw(doskaspr);
+			window.draw(primer1spr);
+			window.draw(text);
+			window.draw(text1);
+			window.draw(text2);
+			window.draw(text3);
+			window.draw(text4);
+			window.draw(text5);
+			window.draw(text6);
+			window.draw(primer2spr);
+			window.draw(primer3spr);
+			if (ansi == true)
+				if (anismetr <= 3)
+				{
+					window.draw(anis1spr);
+				}
+				else
+				{
+					anismetr = 0;
+					ansi = false;
+				}
+				
+			window.display();
+		}
+	}
+		return 0;
+}
